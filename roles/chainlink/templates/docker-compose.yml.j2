@@ -1,0 +1,40 @@
+version: "3.7"
+
+services: 
+  postgres:
+    image: postgres:latest
+    ports:
+      - 127.0.0.1:5432:5432
+    env_file: 
+      - postgres.env
+    volumes: 
+      - chainlink-postgres-data:/var/lib/postgresql/data
+
+  chainlink:
+    build: .
+    env_file:
+      - chainlink.env
+    command: local node -p /chainlink/.password -a /chainlink/.api
+    restart: on-failure
+    ports: 
+      - {{ ansible_nodesvpntun0.ipv4.address}}:6688:6688
+    links:
+      - postgres
+    depends_on: 
+      - postgres
+      - ethereum
+    volumes:
+      - chainlink-data:/chainlink
+
+  ethereum:
+    image: ethereum/client-go:stable
+    ports:
+      - 127.0.0.1:8546:8546
+    command: --syncmode light --ws --ipcdisable --ws.addr 0.0.0.0 --ws.origins="*" --datadir /geth 
+    volumes: 
+      - chainlink-geth-data:/geth
+
+volumes:
+  chainlink-geth-data:
+  chainlink-postgres-data:
+  chainlink-data:

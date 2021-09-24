@@ -1,0 +1,13 @@
+version: "3"
+
+services: 
+  ripple:
+    build: .
+    restart: on-failure
+    ports: 
+      - 127.0.0.1:5005:5005
+#    volumes:
+#      - ripple-data:/var/lib/rippled/
+
+#volumes:
+#  ripple-data:

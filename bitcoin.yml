@@ -1,0 +1,11 @@
+---
+# This role used for set up bitcoin nodes
+#  ansible-playbook -i inventory bitcoin.yml --vault-password-file .vault_password
+- hosts: bitcoin
+  become: yes
+  become_user: root
+  vars_files:
+    - vars.yml
+  roles:
+    - bitcoin
+

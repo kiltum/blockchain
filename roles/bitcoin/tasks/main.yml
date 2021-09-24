@@ -1,0 +1,72 @@
+---
+# tasks file for bitcoin
+
+- name: Check for user bitcoin  
+  user:
+    name: bitcoin
+    groups: bitcoin
+    shell: /sbin/nologin
+    append: yes
+    comment: "Bitcoin User"
+    state: present
+
+- name: Check, that bitcoin is separate direcory. Look docs if fail
+  shell: test $(mount|grep bitcoin|wc -l) -eq 1
+
+- name: Check ownership of /home/bitcoin
+  file:
+    path: /home/bitcoin
+    owner: bitcoin
+    group: bitcoin
+    mode: 0700
+
+- name: Extract bitcoin into /usr/local/bin
+  unarchive:
+    src: bitcoin.tgz
+    dest: /usr/local/bin
+    group: bitcoin
+    owner: bitcoin
+    mode: 0700
+
+- name: Copy startup file
+  copy:
+    src: start.sh
+    dest: /home/bitcoin/start.sh
+    owner: bitcoin
+    group: bitcoin
+    mode: 0700
+
+- name: Copy bitcoind config file
+  template:
+    src: bitcoin.j2
+    dest: /home/bitcoin/bitcoin.conf
+    owner: bitcoin
+    group: bitcoin
+    mode: 0600
+
+- name: Copy bitcoind service file
+  copy:
+    src: bitcoind.service
+    dest: /lib/systemd/system/bitcoind.service
+    owner: bitcoin
+    group: bitcoin
+    mode: 0700
+
+- name: Ensure log file exista
+  copy:
+    content: ""
+    dest: /var/log/bitcoin.log
+    force: no
+    group: bitcoin
+    owner: bitcoin
+    mode: 0644
+
+- name: Reload systemd
+  systemd:
+    daemon_reload=yes
+
+- name: Ensure that bitcoind started
+  systemd:
+    name: bitcoind
+    state: started
+    enabled: True

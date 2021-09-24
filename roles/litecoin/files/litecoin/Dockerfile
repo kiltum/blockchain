@@ -1,0 +1,38 @@
+FROM ubuntu:20.04 as builder
+LABEL maintainer="v.kaloshin@pointpay.io"
+
+ARG UID=10000
+
+ENV TZ=Europe/Moscow
+ADD docker/Makefile /tmp/Makefile
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && \
+    echo $TZ > /etc/timezone && \
+    apt-get update && \
+    apt-get install --no-install-recommends -y \
+    wget coreutils && \
+    wget --no-check-certificate https://download.litecoin.org/litecoin-0.18.1/linux/litecoin-0.18.1-x86_64-linux-gnu.tar.gz && \
+    tar zxvf litecoin-0.18.1-x86_64-linux-gnu.tar.gz && \
+    ls -l /usr/bin/install && \
+    install -m 0755 -o root -g root -t /usr/local/bin litecoin-0.18.1/bin/* && \
+    echo "Stage 1 done"
+
+RUN useradd -r -u $UID dockeruser && \
+    mkdir -p /opt/data && \
+    chown -R dockeruser /opt/data && \
+    # packages
+    apt-get update && \
+    apt-get install --no-install-recommends -y \
+        libboost-chrono1.71.0 \
+        libboost-filesystem1.71.0 \
+        libboost-program-options1.71.0 \
+        libboost-system1.71.0 \
+        libboost-thread1.71.0 \
+        libevent-2.1-7 \
+        libevent-pthreads-2.1-7 \
+        libminiupnpc17 \
+        libssl1.1
+
+ADD docker/litecoin.conf /opt/litecoin.conf
+
+USER dockeruser
+CMD ["litecoind", "-conf=/opt/litecoin.conf", "-datadir=/opt/data", "-rest"]

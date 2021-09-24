@@ -1,0 +1,39 @@
+---
+# tasks file for chainlink
+- name: Creates /opt/docker directory
+  file:
+    path: /opt/docker
+    state: directory
+
+- copy:
+    src: chainlink
+    dest: /opt/docker/
+    owner: root
+    group: root
+
+- name: Try to docwn
+  shell: docker-compose down
+  args:
+    chdir: /opt/docker/chainlink
+  ignore_errors: True
+
+
+- name: override docker-compose
+  template:
+    src: docker-compose.yml.j2
+    dest: /opt/docker/chainlink/docker-compose.yml
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: Build chainlink
+  shell: docker-compose build
+  args:
+    chdir: /opt/docker/chainlink
+
+- name: Try to start up. Fail if already started
+  shell: docker-compose up -d
+  args:
+    chdir: /opt/docker/chainlink
+  ignore_errors: True
+  

@@ -1,0 +1,12 @@
+---
+- name: install updates using yum
+  yum:
+    name: "*"
+    state: latest
+
+- name: Install packages
+  yum:
+    state: present
+    name: 
+      - ipa-client
+      - epel-release

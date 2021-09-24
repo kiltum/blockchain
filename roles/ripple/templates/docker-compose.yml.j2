@@ -1,0 +1,13 @@
+version: "3"
+
+services: 
+  ripple:
+    build: .
+    restart: on-failure
+    ports: 
+      - {{ ansible_nodesvpntun0.ipv4.address}}:5005:5005
+#    volumes:
+#      - ripple-data:/var/lib/rippled/
+
+#volumes:
+#  ripple-data:

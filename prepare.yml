@@ -1,0 +1,10 @@
+---
+# This role used only for initial bootstrap
+- hosts: boot
+  become: yes
+  become_user: root
+  roles:
+    - prepare
+
+
+

@@ -1,0 +1,52 @@
+---
+# tasks file for litecoin
+- name: Creates /opt/docker directory
+  file:
+    path: /opt/docker
+    state: directory
+
+- copy:
+    src: litecoin
+    dest: /opt/docker/
+    owner: root
+    group: root
+
+- name: override docker-compose
+  template:
+    src: docker-compose.yml.j2
+    dest: /opt/docker/litecoin/docker-compose.yml
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: Try to down. Fail if nothing started
+  shell: docker-compose down
+  args:
+    chdir: /opt/docker/litecoin
+  ignore_errors: True
+  
+
+- name: Build litecoin
+  shell: docker-compose build
+  args:
+    chdir: /opt/docker/litecoin
+
+- name: Try to start up. Fail if already started
+  shell: docker-compose up -d
+  args:
+    chdir: /opt/docker/litecoin
+  ignore_errors: True
+  
+# - name: copy nginx site.conf
+#   template:
+#     src: litecoin.conf.j2
+#     dest: /etc/nginx/sites-enabled/litecoin.conf
+#     owner: root
+#     group: root
+#     mode: '0644'
+   
+
+# - name: restart nginx
+#   service:
+#     name: nginx
+#     state: restarted

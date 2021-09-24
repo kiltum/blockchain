@@ -1,0 +1,23 @@
+# https://github.com/zquestz/docker-bitcoin/blob/master/example/docker-compose.yml
+version: "3"
+services:
+  bitcoind:
+    image: zquestz/bitcoin-cash-node
+    # specify additional command line arguments here
+    command: bitcoind
+    healthcheck:
+      test: ["CMD", "/entrypoint.sh", "bitcoin-cli", "getblockchaininfo"]
+    ports:
+      - "{{ ansible_nodesvpntun0.ipv4.address}}:18333:8333"
+    volumes:
+      - bitcoincash-data:/data
+  bitcoin-cli:
+    image: zquestz/bitcoin-cash-node
+    entrypoint: ["/entrypoint.sh", "bitcoin-cli"]
+    command: ""
+    depends_on:
+      - bitcoind
+    network_mode: service:bitcoind
+
+volumes:
+  bitcoincash-data:

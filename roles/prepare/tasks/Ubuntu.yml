@@ -1,0 +1,19 @@
+---
+- name: Update repositories cache 
+  apt:
+    update_cache: yes
+    
+- name: Update all packages to their latest version
+  apt:
+    name: "*"
+    state: latest
+
+- name: Install packages 
+  apt:
+    pkg:
+    - freeipa-client 
+    - chrony
+    - net-tools
+    - screen
+    - software-properties-common
+

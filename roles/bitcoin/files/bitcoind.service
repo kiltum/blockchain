@@ -1,0 +1,36 @@
+[Unit]
+Description=Bitcoin daemon
+After=network.target home-bitcoin.mount 
+
+[Service]
+ExecStart=/home/bitcoin/start.sh
+
+# Process management
+####################
+
+Type=forking
+PIDFile=/home/bitcoin/.bitcoin/bitcoind.pid
+Restart=on-failure
+
+# Directory creation and permissions
+####################################
+
+# Run as bitcoin:bitcoin or <youruser>
+User=bitcoin
+Group=bitcoin
+
+# Hardening measures
+####################
+
+# Provide a private /tmp and /var/tmp.
+PrivateTmp=true
+
+# Use a new /dev namespace only populated with API pseudo devices
+# such as /dev/null, /dev/zero and /dev/random.
+PrivateDevices=true
+
+# Deny the creation of writable and executable memory mappings.
+MemoryDenyWriteExecute=true
+
+[Install]
+WantedBy=multi-user.target

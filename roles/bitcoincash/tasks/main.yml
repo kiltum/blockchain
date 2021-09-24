@@ -1,0 +1,37 @@
+---
+# tasks file for bitcoincash
+- name: Creates /opt/docker directory
+  file:
+    path: /opt/docker
+    state: directory
+
+- name: Creates /opt/docker/bitcoincash directory
+  file:
+    path: /opt/docker/bitcoincash
+    state: directory
+
+- name: override docker-compose
+  template:
+    src: docker-compose.yml.j2
+    dest: /opt/docker/bitcoincash/docker-compose.yml
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: Try to down. Fail if nothing started
+  shell: docker-compose down
+  args:
+    chdir: /opt/docker/bitcoincash
+  ignore_errors: True
+  
+
+- name: Build litecoin
+  shell: docker-compose build
+  args:
+    chdir: /opt/docker/bitcoincash
+
+- name: Try to start up. Fail if already started
+  shell: docker-compose up -d
+  args:
+    chdir: /opt/docker/bitcoincash
+  ignore_errors: True

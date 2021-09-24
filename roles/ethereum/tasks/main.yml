@@ -1,0 +1,64 @@
+---
+# tasks file for ethereum
+- name: Install packages 
+  apt:
+    pkg:
+    - software-properties-common
+
+- name: Add etherium repository from PPA
+  ansible.builtin.apt_repository:
+    repo: ppa:ethereum/ethereum
+
+- name: Install packages 
+  apt:
+    pkg:
+    - ethereum
+    - nginx
+    - certbot
+    - python3-certbot-nginx
+    - apache2-utils
+
+- name: Check for user geth  
+  user:
+    name: geth
+    groups: geth
+    shell: /sbin/nologin
+    append: yes
+    comment: "Ethereum User"
+    state: present
+
+- name: Check, that ethereum is separate direcory. Look docs if fail
+  shell: test $(mount|grep geth|wc -l) -eq 1
+
+- name: Check ownership of /home/geth
+  file:
+    path: /home/geth
+    owner: geth
+    group: geth
+    mode: 0700
+
+- name: Copy geth start file
+  template:
+    src: geth.j2
+    dest: /lib/systemd/system/geth.service
+    owner: root
+    group: root
+    mode: 0700
+
+- name: Copy geth config file
+  copy:
+    src: config.toml
+    dest: /home/geth/config.toml
+    owner: geth
+    group: geth
+    mode: 0600
+
+- name: Reload systemd
+  systemd:
+    daemon_reload=yes
+
+- name: Ensure that geth started
+  systemd:
+    name: geth
+    state: started
+    enabled: True

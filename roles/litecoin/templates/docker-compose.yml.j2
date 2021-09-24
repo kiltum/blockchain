@@ -1,0 +1,19 @@
+version: "3.7"
+
+services:
+
+  litecoin-client:
+    image: litecoin
+    container_name: litecoin
+    hostname: litecoin
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    volumes:
+      - litecoin-data:/opt/data
+    ports:
+      - {{ ansible_nodesvpntun0.ipv4.address}}:8532:8532
+    restart: always
+
+volumes:
+  litecoin-data:

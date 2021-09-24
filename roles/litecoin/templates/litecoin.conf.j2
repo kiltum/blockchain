@@ -1,0 +1,23 @@
+server {
+	listen {{ ansible_nodesvpntun0.ipv4.address}}:80;
+
+location /litecoin {
+#        auth_basic "Restricted access to this site";
+#       auth_basic_user_file /etc/nginx/htpasswd;
+        # Proxy to geth note that is bind to localhost port
+        proxy_pass http://localhost:8532/;
+    }
+
+}
+
+server {
+        listen {{ ansible_nodesvpntun0.ipv4.address}}:80;
+
+location /eeee {
+#        auth_basic "Restricted access to this site";
+#       auth_basic_user_file /etc/nginx/htpasswd;
+        # Proxy to geth note that is bind to localhost port
+        proxy_pass http://localhost:8532/;
+    }
+
+}
