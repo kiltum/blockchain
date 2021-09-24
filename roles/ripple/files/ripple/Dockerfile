@@ -1,6 +1,6 @@
 FROM ubuntu:focal
 
-LABEL maintainer="v.kaloshin@pointpay.io"
+LABEL maintainer="kiltum@kiltum.tech"
 
 RUN export LANGUAGE=C.UTF-8; export LANG=C.UTF-8; export LC_ALL=C.UTF-8; export DEBIAN_FRONTEND=noninteractive
 

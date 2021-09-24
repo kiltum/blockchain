@@ -1,51 +1,21 @@
 
 # bootstrap, only for fresh servers
 [boot]
-auth01.pointpay.work ansible_host=172.255.232.181 ansible_user=root
-auth02.pointpay.work ansible_host=173.0.157.168 ansible_user=root
-auth03.pointpay.work ansible_host=103.23.208.207 ansible_user=root
-
-node01.pointpay.work ansible_host=23.109.105.244 ansible_user=root
-node02.pointpay.work ansible_host=173.233.147.12 ansible_user=root
-node03.pointpay.work ansible_host=188.42.127.4 ansible_user=root
-
-node04.pointpay.work ansible_host=23.109.105.164 ansible_user=root
-node05.pointpay.work ansible_host=173.233.147.28 ansible_user=root
-node06.pointpay.work ansible_host=188.42.127.12 ansible_user=root
-
-node07.pointpay.work ansible_host=23.109.105.172 ansible_user=root
-node08.pointpay.work ansible_host=173.233.146.76 ansible_user=root
-node09.pointpay.work ansible_host=188.42.127.92 ansible_user=root
-
+# put your servers here
 # FreeIPA servers
-[ipa]
-auth[01:03].pointpay.work
-
-# all blockchain nodes
 [nodes]
-node[01:09].pointpay.work
 
 [bitcoin]
-bitcoin1.pointpay.work ansible_host=node01.pointpay.work
-bitcoin2.pointpay.work ansible_host=node02.pointpay.work
 
 [ethereum]
-ethereum1.pointpay.work ansible_host=node04.pointpay.work node_add="--gcmode=archive"
-ethereum2.pointpay.work ansible_host=node05.pointpay.work node_add=""
+nodename node_add="--gcmode=archive"
+nodename node_add=""
 
 [chainlink]
-chainlink1.pointpay.work ansible_host=node05.pointpay.work
-chainlink2.pointpay.work ansible_host=node06.pointpay.work
 
 [litecoin]
-litecoin1.pointplay.work ansible_host=node07.pointpay.work
-litecoin2.pointplay.work ansible_host=node08.pointpay.work
 
 [bitcoincash]
-bitcoincash1.pointpay.work ansible_host=node01.pointpay.work
-bitcoincash2.pointpay.work ansible_host=node02.pointpay.work
 
 [ripple]
-ripple1.pointpay.work ansible_host=node04.pointpay.work
-ripple2.pointpay.work ansible_host=node05.pointpay.work
 

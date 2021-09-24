@@ -1,5 +1,5 @@
 FROM ubuntu:20.04 as builder
-LABEL maintainer="v.kaloshin@pointpay.io"
+LABEL maintainer="kiltum@kiltum.tech"
 
 ARG UID=10000
 
